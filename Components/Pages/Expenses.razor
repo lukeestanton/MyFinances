@@ -10,9 +10,52 @@
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
     <MudText Typo="Typo.h4" Class="mb-4">Expenses</MudText>
     
-    
+    <!-- Add Expense Section -->
     <MudPaper Class="pa-4 mb-4">
-        <MudText Typo="Typo.h6" Class="mb-4">Expenses</MudText>
+        <MudText Typo="Typo.h6" Class="mb-4">Add New Expense</MudText>
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="newExpense.Description" 
+                             Label="Description" 
+                             Variant="Variant.Outlined" 
+                             Required="true" />
+            </MudItem>
+            <MudItem xs="12" sm="3">
+                <MudNumericField @bind-Value="newExpense.Amount" 
+                                Label="Amount" 
+                                Variant="Variant.Outlined" 
+                                Format="F2"
+                                Min="0"
+                                Required="true" />
+            </MudItem>
+            <MudItem xs="12" sm="3">
+                <MudDatePicker @bind-Date="newExpenseDate" 
+                              Label="Date" 
+                              Variant="Variant.Outlined" 
+                              Required="true" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudButton Variant="Variant.Filled" 
+                          Color="Color.Primary" 
+                          OnClick="AddExpense"
+                          Disabled="@(!IsValidExpense())"
+                          StartIcon="@Icons.Material.Filled.Add">
+                    Add Expense
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          OnClick="ClearForm"
+                          StartIcon="@Icons.Material.Filled.Clear"
+                          Class="ml-2">
+                    Clear
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Expenses Table -->
+    <MudPaper Class="pa-4 mb-4">
+        <MudText Typo="Typo.h6" Class="mb-4">Expenses (@_expenses.Count)</MudText>
         <MudTable Items="@_expenses" Dense="false" Hover="true" Bordered="true" Striped="false">
             <HeaderContent>
                 <MudTh>Description</MudTh>
@@ -27,12 +70,15 @@
                 <MudTd DataLabel="Date">@context.Date.ToShortDateString()</MudTd>
                 <MudTd DataLabel="Category">@context.Category</MudTd>
                 <MudTd>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteExpense(context))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                  OnClick="@(() => DeleteExpense(context))"
+                                  Color="Color.Error" />
                 </MudTd>
             </RowTemplate>
         </MudTable>
     </MudPaper>
 
+    <!-- Category Chart -->
     <MudPaper Class="pa-4">
         <MudText Typo="Typo.h6" Class="mb-4">Category Distribution by Group</MudText>
         <MudChart ChartType="ChartType.Donut" Width="300px" Height="300px" InputData="@_categoryData" InputLabels="@_categoryLabels"></MudChart>
@@ -43,8 +89,17 @@
     private List<Expense> _expenses = new();
     private double[] _categoryData = Array.Empty<double>();
     private string[] _categoryLabels = Array.Empty<string>();
+    
+    // New expense form properties
+    private Expense newExpense = new();
+    private DateTime? newExpenseDate = DateTime.Today;
 
     protected override async Task OnInitializedAsync()
+    {
+        await LoadExpenses();
+    }
+
+    private async Task LoadExpenses()
     {
         // Get expenses from client
         _expenses = await ExpenseClient.GetExpensesAsync();
@@ -55,10 +110,34 @@
             expense.Category = await CategorizationService.CategorizeExpenseAsync(expense);
         }
 
-        // Get category distribution data
-        var (data, labels) = AnalysisService.GetCategoryDistributionData(_expenses);
-        _categoryData = data;
-        _categoryLabels = labels;
+        // Update category distribution data
+        UpdateCategoryData();
+    }
+
+    private async Task AddExpense()
+    {
+        if (!IsValidExpense()) return;
+
+        // Set the date from the date picker
+        newExpense.Date = newExpenseDate ?? DateTime.Today;
+
+        // Categorize the new expense before adding
+        newExpense.Category = await CategorizationService.CategorizeExpenseAsync(newExpense);
+
+        // Add expense to the client (this updates the underlying list)
+        await ExpenseClient.AddExpenseAsync(newExpense);
+
+        // Reload the expenses list from the client to stay in sync
+        _expenses = await ExpenseClient.GetExpensesAsync();
+
+        // Update category distribution data
+        UpdateCategoryData();
+
+        // Clear the form
+        ClearForm();
+
+        // Force UI update
+        StateHasChanged();
     }
 
     private async Task DeleteExpense(Expense expense)
@@ -67,6 +146,24 @@
         _expenses.Remove(expense);
         
         // Update category distribution data
+        UpdateCategoryData();
+    }
+
+    private void ClearForm()
+    {
+        newExpense = new Expense();
+        newExpenseDate = DateTime.Today;
+    }
+
+    private bool IsValidExpense()
+    {
+        return !string.IsNullOrWhiteSpace(newExpense.Description) && 
+               newExpense.Amount > 0 && 
+               newExpenseDate.HasValue;
+    }
+
+    private void UpdateCategoryData()
+    {
         var (data, labels) = AnalysisService.GetCategoryDistributionData(_expenses);
         _categoryData = data;
         _categoryLabels = labels;

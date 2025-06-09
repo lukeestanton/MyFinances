@@ -1,9 +1,3 @@
-/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.csproj.AssemblyReference.cache
-/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.GeneratedMSBuildEditorConfig.editorconfig
-/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.AssemblyInfoInputs.cache
-/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.AssemblyInfo.cs
-/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.csproj.CoreCompileInputs.cache
-/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.MvcApplicationPartsAssemblyInfo.cache
 /Users/lukestanton/MyFinances/bin/Debug/net9.0/appsettings.Development.json
 /Users/lukestanton/MyFinances/bin/Debug/net9.0/appsettings.json
 /Users/lukestanton/MyFinances/bin/Debug/net9.0/MyFinances.staticwebassets.runtime.json
@@ -32,6 +26,13 @@
 /Users/lukestanton/MyFinances/bin/Debug/net9.0/MudBlazor.dll
 /Users/lukestanton/MyFinances/bin/Debug/net9.0/System.ClientModel.dll
 /Users/lukestanton/MyFinances/bin/Debug/net9.0/System.Memory.Data.dll
+/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.csproj.AssemblyReference.cache
+/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.GeneratedMSBuildEditorConfig.editorconfig
+/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.AssemblyInfoInputs.cache
+/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.AssemblyInfo.cs
+/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.csproj.CoreCompileInputs.cache
+/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.MvcApplicationPartsAssemblyInfo.cache
+/Users/lukestanton/MyFinances/obj/Debug/net9.0/MyFinances.sourcelink.json
 /Users/lukestanton/MyFinances/obj/Debug/net9.0/scopedcss/bundle/MyFinances.styles.css
 /Users/lukestanton/MyFinances/obj/Debug/net9.0/compressed/tzxjg6is5z-f7451o6lak.gz
 /Users/lukestanton/MyFinances/obj/Debug/net9.0/compressed/0wz98yz2xy-shgs22i5w1.gz
