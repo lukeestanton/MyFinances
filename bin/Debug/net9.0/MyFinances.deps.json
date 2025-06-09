@@ -9,6 +9,7 @@
       "MyFinances/1.0.0": {
         "dependencies": {
           "Azure.AI.OpenAI": "1.0.0-beta.13",
+          "LiteDB": "5.0.21",
           "MudBlazor": "8.7.0"
         },
         "runtime": {
@@ -42,6 +43,17 @@
           "lib/net6.0/Azure.Core.dll": {
             "assemblyVersion": "1.37.0.0",
             "fileVersion": "1.3700.24.6103"
+          }
+        }
+      },
+      "LiteDB/5.0.21": {
+        "dependencies": {
+          "System.Buffers": "4.5.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/LiteDB.dll": {
+            "assemblyVersion": "5.0.21.0",
+            "fileVersion": "5.0.21.0"
           }
         }
       },
@@ -206,6 +218,7 @@
           }
         }
       },
+      "System.Buffers/4.5.1": {},
       "System.ClientModel/1.0.0": {
         "dependencies": {
           "System.Memory.Data": "1.0.2",
@@ -261,6 +274,13 @@
       "sha512": "sha512-ZSWV/ftBM/c/+Eo2hlzeEWntjqNG+8TWXX/DAKjBSWIf7nEvFILQoJL7JZx5HjypDvdNUMj5J2ji8ZpFFSghSg==",
       "path": "azure.core/1.37.0",
       "hashPath": "azure.core.1.37.0.nupkg.sha512"
+    },
+    "LiteDB/5.0.21": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ykJ7ffFl7P9YQKR/PLci6zupiLrsSCNkOTiw6OtzntH7d2kCYp5L1+3a/pksKgTEHcJBoPXFtg7VZSGVBseN9w==",
+      "path": "litedb/5.0.21",
+      "hashPath": "litedb.5.0.21.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authorization/9.0.1": {
       "type": "package",
@@ -373,6 +393,13 @@
       "sha512": "sha512-dgQ2MsgJAA1y6S0KmaOcGQWIHkJKA6XedC8X4VKXGRRcS3CFtgcytzT4LAxNoklNBqeveOyiHNEk6CG8a7YHYQ==",
       "path": "mudblazor/8.7.0",
       "hashPath": "mudblazor.8.7.0.nupkg.sha512"
+    },
+    "System.Buffers/4.5.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg==",
+      "path": "system.buffers/4.5.1",
+      "hashPath": "system.buffers.4.5.1.nupkg.sha512"
     },
     "System.ClientModel/1.0.0": {
       "type": "package",

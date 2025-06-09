@@ -1,0 +1,36 @@
+# .NET Core build folders
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Environment files
+*.env
+appsettings.*.json
+!appsettings.json
+!appsettings.Example.json
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 

@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "6+HebX16iHM=",
+  "dgSpecHash": "QoeiF/exLoQ=",
   "success": true,
   "projectFilePath": "/Users/lukestanton/MyFinances/MyFinances.csproj",
   "expectedPackageFiles": [
     "/Users/lukestanton/.nuget/packages/azure.ai.openai/1.0.0-beta.13/azure.ai.openai.1.0.0-beta.13.nupkg.sha512",
     "/Users/lukestanton/.nuget/packages/azure.core/1.37.0/azure.core.1.37.0.nupkg.sha512",
+    "/Users/lukestanton/.nuget/packages/litedb/5.0.21/litedb.5.0.21.nupkg.sha512",
     "/Users/lukestanton/.nuget/packages/microsoft.aspnetcore.authorization/9.0.1/microsoft.aspnetcore.authorization.9.0.1.nupkg.sha512",
     "/Users/lukestanton/.nuget/packages/microsoft.aspnetcore.components/9.0.1/microsoft.aspnetcore.components.9.0.1.nupkg.sha512",
     "/Users/lukestanton/.nuget/packages/microsoft.aspnetcore.components.analyzers/9.0.1/microsoft.aspnetcore.components.analyzers.9.0.1.nupkg.sha512",
@@ -22,6 +23,7 @@
     "/Users/lukestanton/.nuget/packages/microsoft.extensions.primitives/9.0.1/microsoft.extensions.primitives.9.0.1.nupkg.sha512",
     "/Users/lukestanton/.nuget/packages/microsoft.jsinterop/9.0.1/microsoft.jsinterop.9.0.1.nupkg.sha512",
     "/Users/lukestanton/.nuget/packages/mudblazor/8.7.0/mudblazor.8.7.0.nupkg.sha512",
+    "/Users/lukestanton/.nuget/packages/system.buffers/4.5.1/system.buffers.4.5.1.nupkg.sha512",
     "/Users/lukestanton/.nuget/packages/system.clientmodel/1.0.0/system.clientmodel.1.0.0.nupkg.sha512",
     "/Users/lukestanton/.nuget/packages/system.diagnostics.diagnosticsource/6.0.1/system.diagnostics.diagnosticsource.6.0.1.nupkg.sha512",
     "/Users/lukestanton/.nuget/packages/system.memory.data/1.0.2/system.memory.data.1.0.2.nupkg.sha512",

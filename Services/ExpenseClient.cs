@@ -1,3 +1,4 @@
+using LiteDB;
 using MyFinances.Models;
 
 namespace MyFinances.Services;
@@ -11,38 +12,29 @@ public interface IExpenseClient
 
 public class ExpenseClient : IExpenseClient
 {
-    private List<Expense> _expenses;
-
-    public ExpenseClient()
-    {
-        // Initialize with sample expenses
-        _expenses = new List<Expense>
-        {
-            new() { Description = "Netflix Subscription", Amount = 15.99m, Date = DateTime.Now.AddDays(-2) },
-            new() { Description = "Walmart Groceries", Amount = 85.50m, Date = DateTime.Now.AddDays(-1) },
-            new() { Description = "Shell Gas Station", Amount = 45.00m, Date = DateTime.Now.AddDays(-3) },
-            new() { Description = "Starbucks Coffee", Amount = 4.95m, Date = DateTime.Now },
-            new() { Description = "Amazon Prime", Amount = 14.99m, Date = DateTime.Now.AddDays(-5) },
-            new() { Description = "Electric Bill", Amount = 120.00m, Date = DateTime.Now.AddDays(-7) },
-            new() { Description = "Gym Membership", Amount = 29.99m, Date = DateTime.Now.AddDays(-4) },
-            new() { Description = "Spotify Premium", Amount = 9.99m, Date = DateTime.Now.AddDays(-6) }
-        };
-    }
+    private readonly string _dbPath = "expenses.db"; // This will be in your app’s folder
+    private const string CollectionName = "expenses";
 
     public Task<List<Expense>> GetExpensesAsync()
     {
-        return Task.FromResult(_expenses);
+        using var db = new LiteDatabase(_dbPath);
+        var col = db.GetCollection<Expense>(CollectionName);
+        return Task.FromResult(col.FindAll().ToList());
     }
 
     public Task AddExpenseAsync(Expense expense)
     {
-        _expenses.Add(expense);
+        using var db = new LiteDatabase(_dbPath);
+        var col = db.GetCollection<Expense>(CollectionName);
+        col.Insert(expense);
         return Task.CompletedTask;
     }
 
     public Task DeleteExpenseAsync(Expense expense)
     {
-        _expenses.Remove(expense);
+        using var db = new LiteDatabase(_dbPath);
+        var col = db.GetCollection<Expense>(CollectionName);
+        col.DeleteMany(e => e.Description == expense.Description && e.Amount == expense.Amount && e.Date == expense.Date);
         return Task.CompletedTask;
     }
-} 
+}
