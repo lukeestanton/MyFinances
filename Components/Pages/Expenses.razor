@@ -7,11 +7,110 @@
 
 <PageTitle>Expenses</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
-    <MudText Typo="Typo.h4" Class="mb-4">Expenses</MudText>
+<MudContainer MaxWidth="MaxWidth.False" Class="mt-4 px-16" Style="max-width: 95vw;">
     
+    <!-- Spending Trend Chart -->
+    <MudGrid Class="mb-4" gutterSize="24px">
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4">
+                <MudGrid>
+                    <MudItem xs="12" Class="d-flex justify-center">
+                        <MudText Typo="Typo.h2" Color="Color.Default" Class="mb-0">
+                            @(_spendingTrendData.Sum().ToString("C"))
+                        </MudText>
+                    </MudItem>
+                    <MudItem xs="12" Class="d-flex justify-center">
+                        <MudText Typo="Typo.h6" Color="Color.Default" Class="mb-4">
+                            TOTAL SPENDING PAST 6 MONTHS
+                        </MudText>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudChart ChartType="ChartType.Line" 
+                                 ChartSeries="@_spendingTrendSeries" 
+                                 XAxisLabels="@_spendingTrendLabels" 
+                                 Width="100%" 
+                                 Height="600px"
+                                 ChartOptions="@_chartOptions"
+                                 AxisChartOptions="@_axisChartOptions" />
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4">
+                <MudGrid>
+                    <MudItem xs="12" Class="d-flex justify-center">
+                        <MudText Typo="Typo.h2" Color="Color.Default" Class="mb-0">
+                            @(_categoryGroupSeries.Any() ? _categoryGroupSeries.Sum(s => s.Data.Sum()).ToString("C") : "$0.00")
+                        </MudText>
+                    </MudItem>
+                    <MudItem xs="12" Class="d-flex justify-center">
+                        <MudText Typo="Typo.h6" Color="Color.Default" Class="mb-4">
+                            TOP 5 CATEGORIES SPENDING
+                        </MudText>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudChart ChartType="ChartType.Bar" 
+                                 ChartSeries="@_categoryGroupSeries" 
+                                 XAxisLabels="@_categoryGroupLabels" 
+                                 Width="100%" 
+                                 Height="600px"
+                                 ChartOptions="@_chartOptions"
+                                 AxisChartOptions="@_axisChartOptions" />
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Dashboard Charts Row -->
+    <MudGrid Class="mb-4" gutterSize="24px">
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Class="pa-4 d-flex flex-column align-center" Style="height: 600px;">
+                <MudText Typo="Typo.h6" Class="mb-4">Spending Categories</MudText>
+                <MudChart ChartType="ChartType.Donut"
+                        Width="450px" Height="450px"
+                        InputData="@_categoryData"
+                        InputLabels="@_categoryLabels" />
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Class="pa-4 d-flex flex-column align-center" Style="height: 600px;">
+                <MudText Typo="Typo.h6" Class="mb-4">Productive vs Unproductive</MudText>
+                <MudChart ChartType="ChartType.Pie"
+                        Width="450px" Height="450px"
+                        InputData="@_productivityData"
+                        InputLabels="@_productivityLabels" />
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Class="pa-4" Style="height: 600px;">
+                <MudText Typo="Typo.h6" Class="mb-4 d-flex flex-column align-center">Largest Expenses (6 Months)</MudText>
+                <MudList Dense="true" Clickable="false" T="Expense" Class="py-2">
+                    @foreach (var expense in _expenses
+                        .Where(e => e.Date >= DateTime.Today.AddMonths(-6))
+                        .OrderByDescending(e => e.Amount)
+                        .Take(7))
+                    {
+                        <MudListItem T="Expense" Clickable="false" Class="py-2">
+                            <div class="d-flex justify-space-between align-center" style="width: 100%;">
+                                <div>
+                                    <MudText>@expense.Description</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Info">@expense.Date.ToString("MMM d")</MudText>
+                                </div>
+                                <MudText Color="Color.Info">@expense.Amount.ToString("C")</MudText>
+                            </div>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+
+
     <!-- Add Expense Section -->
-    <MudPaper Class="pa-4 mb-4">
+    <MudPaper Class="pa-4 mb-4" Style="background:#181820;">
         <MudText Typo="Typo.h6" Class="mb-4">Add New Expense</MudText>
         <MudGrid>
             <MudItem xs="12" sm="6">
@@ -54,7 +153,7 @@
     </MudPaper>
 
     <!-- Expenses Table -->
-    <MudPaper Class="pa-4 mb-4">
+    <MudPaper Class="pa-4 mb-4" Style="background:#181820;">
         <MudText Typo="Typo.h6" Class="mb-4">Expenses (@_expenses.Count)</MudText>
         <MudTable Items="@_expenses" Dense="false" Hover="true" Bordered="true" Striped="false">
             <HeaderContent>
@@ -77,18 +176,31 @@
             </RowTemplate>
         </MudTable>
     </MudPaper>
-
-    <!-- Category Chart -->
-    <MudPaper Class="pa-4">
-        <MudText Typo="Typo.h6" Class="mb-4">Category Distribution by Group</MudText>
-        <MudChart ChartType="ChartType.Donut" Width="500px" Height="500px" InputData="@_categoryData" InputLabels="@_categoryLabels"></MudChart>
-    </MudPaper>
 </MudContainer>
 
 @code {
     private List<Expense> _expenses = new();
     private double[] _categoryData = Array.Empty<double>();
     private string[] _categoryLabels = Array.Empty<string>();
+    private double[] _productivityData = Array.Empty<double>();
+    private string[] _productivityLabels = Array.Empty<string>();
+    private double[] _largestExpensesData = Array.Empty<double>();
+    private string[] _largestExpensesLabels = Array.Empty<string>();
+    private double[] _spendingTrendData = Array.Empty<double>();
+    private string[] _spendingTrendLabels = Array.Empty<string>();
+    private List<ChartSeries> _spendingTrendSeries = new();
+    private List<ChartSeries> _categoryGroupSeries = new();
+    private string[] _categoryGroupLabels = Array.Empty<string>();
+    private ChartOptions _chartOptions = new() 
+    { 
+        LineStrokeWidth = 4,
+        YAxisFormat = "C",
+        YAxisTicks = 500
+    };
+    private AxisChartOptions _axisChartOptions = new() 
+    { 
+        XAxisLabelRotation = 0
+    };
     
     // New expense form properties
     private Expense newExpense = new();
@@ -104,14 +216,103 @@
         // Get expenses from client
         _expenses = await ExpenseClient.GetExpensesAsync();
 
-        // Categorize each expense
-        foreach (var expense in _expenses)
-        {
-            expense.Category = await CategorizationService.CategorizeExpenseAsync(expense);
-        }
-
         // Update category distribution data
         UpdateCategoryData();
+        
+        // Update spending trend data
+        UpdateSpendingTrendData();
+    }
+
+    private void UpdateSpendingTrendData()
+    {
+        // Get total monthly trend and X-axis labels
+        var (totalData, labels) = AnalysisService.GetMonthlySpendingTrend(_expenses);
+        _spendingTrendData = totalData;
+        _spendingTrendLabels = labels;
+
+        // Get distinct categories (ignore null/empty)
+        var categories = _expenses
+            .Select(e => e.Category)
+            .Distinct()
+            .ToList();
+
+        var topCategories = _expenses
+            .GroupBy(e => e.Category)
+            .OrderByDescending(g => g.Sum(e => e.Amount))
+            .Take(5)
+            .Select(g => g.Key)
+            .ToList();
+
+        // Build chart series, first the total
+        var allSeries = new List<ChartSeries>
+        {
+            new ChartSeries
+            {
+                Name = "Total",
+                Data = totalData,
+                ShowDataMarkers = true,
+                LineDisplayType = LineDisplayType.Line
+            }
+        };
+
+        // Add a line for each category
+        foreach (var category in topCategories)
+        {
+            // Calculate totals for this category, per month label
+            double[] categoryTotals = labels
+                .Select(label =>
+                    _expenses.Where(e =>
+                            e.Category == category &&
+                            e.Date.ToString("MMM yyyy") == label
+                        )
+                        .Sum(e => (double)e.Amount)
+                ).ToArray();
+
+            allSeries.Add(new ChartSeries
+            {
+                Name = category.ToString(),
+                Data = categoryTotals,
+                ShowDataMarkers = false,
+                LineDisplayType = LineDisplayType.Line
+            });
+        }
+
+        _spendingTrendSeries = allSeries;
+        
+        // Update category group data for stacked bar chart
+        UpdateCategoryGroupData(labels);
+    }
+
+    private void UpdateCategoryGroupData(string[] monthLabels)
+    {
+        // Get top 5 categories by total spending
+        var topCategories = _expenses
+            .GroupBy(e => e.Category)
+            .OrderByDescending(g => g.Sum(e => e.Amount))
+            .Take(5)
+            .Select(g => g.Key)
+            .ToList();
+
+        _categoryGroupLabels = monthLabels;
+        _categoryGroupSeries = new List<ChartSeries>();
+
+        foreach (var category in topCategories)
+        {
+            double[] categoryTotals = monthLabels
+                .Select(label =>
+                    _expenses.Where(e =>
+                            e.Category == category &&
+                            e.Date.ToString("MMM yyyy") == label
+                        )
+                        .Sum(e => (double)e.Amount)
+                ).ToArray();
+
+            _categoryGroupSeries.Add(new ChartSeries
+            {
+                Name = category.ToString(),
+                Data = categoryTotals
+            });
+        }
     }
 
     private async Task AddExpense()
@@ -132,6 +333,9 @@
 
         // Update category distribution data
         UpdateCategoryData();
+        
+        // Update spending trend data
+        UpdateSpendingTrendData();
 
         // Clear the form
         ClearForm();
@@ -147,6 +351,9 @@
         
         // Update category distribution data
         UpdateCategoryData();
+        
+        // Update spending trend data
+        UpdateSpendingTrendData();
     }
 
     private void ClearForm()
@@ -167,5 +374,13 @@
         var (data, labels) = AnalysisService.GetCategoryDistributionData(_expenses);
         _categoryData = data;
         _categoryLabels = labels;
+
+        var (prodData, prodLabels) = AnalysisService.GetProductivityDistributionData(_expenses);
+        _productivityData = prodData;
+        _productivityLabels = prodLabels;
+
+        var (largestData, largestLabels) = AnalysisService.GetLargestExpensesData(_expenses);
+        _largestExpensesData = largestData;
+        _largestExpensesLabels = largestLabels;
     }
 }

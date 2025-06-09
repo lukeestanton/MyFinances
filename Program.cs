@@ -2,6 +2,7 @@ using MyFinances;
 using MudBlazor.Services;
 using MyFinances.Services;
 using MyFinances.Components;
+using MyFinances.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,26 @@ builder.Services.AddRazorComponents()
 
 var app = builder.Build();
 
+// Add sample expenses if the database is empty
+using (var scope = app.Services.CreateScope())
+{
+    var expenseClient = scope.ServiceProvider.GetRequiredService<IExpenseClient>();
+    var expenses = await expenseClient.GetExpensesAsync();
+    
+    if (!expenses.Any())
+    {
+        var sampleExpenses = new List<Expense>
+        {
+            new Expense { Description = "Sample Expense", Amount = 1500.00m, Date = DateTime.Today.AddDays(-5), Category = ExpenseCategory.Other }
+        };
+
+        foreach (var expense in sampleExpenses)
+        {
+            await expenseClient.AddExpenseAsync(expense);
+        }
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -26,7 +47,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAntiforgery();
 

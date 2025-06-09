@@ -12,7 +12,7 @@ public interface IExpenseClient
 
 public class ExpenseClient : IExpenseClient
 {
-    private readonly string _dbPath = "expenses.db"; // This will be in your app’s folder
+    private readonly string _dbPath = "expenses.db";
     private const string CollectionName = "expenses";
 
     public Task<List<Expense>> GetExpensesAsync()

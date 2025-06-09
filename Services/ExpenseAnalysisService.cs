@@ -81,5 +81,115 @@ namespace MyFinances.Services
 
             return (data, labels);
         }
+
+        public (double[] Data, string[] Labels) GetMonthlySpendingTrend(List<Expense> expenses)
+        {
+            if (!expenses.Any())
+                return (Array.Empty<double>(), Array.Empty<string>());
+
+            var mostRecentDate = expenses.Max(e => e.Date);
+            var sixMonthsAgo = mostRecentDate.AddMonths(-5); // -5 to include current month
+            var monthlyTotals = new Dictionary<DateTime, decimal>();
+
+            // Initialize the last 6 months with zero values
+            for (int i = 0; i < 6; i++)
+            {
+                var date = mostRecentDate.AddMonths(-i);
+                monthlyTotals[new DateTime(date.Year, date.Month, 1)] = 0;
+            }
+
+            // Sum up expenses for each month
+            foreach (var expense in expenses.Where(e => e.Date >= sixMonthsAgo))
+            {
+                var monthStart = new DateTime(expense.Date.Year, expense.Date.Month, 1);
+                if (monthlyTotals.ContainsKey(monthStart))
+                {
+                    monthlyTotals[monthStart] += expense.Amount;
+                }
+            }
+
+            // Sort by date ascending
+            var sortedMonths = monthlyTotals.OrderBy(x => x.Key).ToList();
+
+            // Convert to arrays for the chart
+            var data = new double[sortedMonths.Count];
+            var labels = new string[sortedMonths.Count];
+
+            for (int i = 0; i < sortedMonths.Count; i++)
+            {
+                data[i] = (double)sortedMonths[i].Value;
+                labels[i] = sortedMonths[i].Key.ToString("MMM yyyy");
+            }
+
+            return (data, labels);
+        }
+
+        public (double[] Data, string[] Labels) GetProductivityDistributionData(List<Expense> expenses)
+        {
+            var productiveCategories = new HashSet<ExpenseCategory>
+            {
+                ExpenseCategory.Tuition,
+                ExpenseCategory.Books,
+                ExpenseCategory.Courses,
+                ExpenseCategory.Healthcare,
+                ExpenseCategory.MedicalInsurance,
+                ExpenseCategory.Dental,
+                ExpenseCategory.Vision,
+                ExpenseCategory.Prescriptions,
+                ExpenseCategory.Investments,
+                ExpenseCategory.Savings,
+                ExpenseCategory.BusinessExpenses,
+                ExpenseCategory.OfficeSupplies,
+                ExpenseCategory.ProfessionalServices,
+                ExpenseCategory.Software,
+                ExpenseCategory.Electronics,
+                ExpenseCategory.HomeImprovement
+            };
+
+            decimal productiveTotal = 0;
+            decimal unproductiveTotal = 0;
+
+            foreach (var expense in expenses)
+            {
+                if (productiveCategories.Contains(expense.Category))
+                {
+                    productiveTotal += expense.Amount;
+                }
+                else
+                {
+                    unproductiveTotal += expense.Amount;
+                }
+            }
+
+            var data = new double[] { (double)productiveTotal, (double)unproductiveTotal };
+            var labels = new string[] 
+            { 
+                $"Productive (${productiveTotal:N2})", 
+                $"Unproductive (${unproductiveTotal:N2})" 
+            };
+
+            return (data, labels);
+        }
+
+        public (double[] Data, string[] Labels) GetLargestExpensesData(List<Expense> expenses)
+        {
+            if (!expenses.Any())
+                return (Array.Empty<double>(), Array.Empty<string>());
+
+            var mostRecentDate = expenses.Max(e => e.Date);
+            var sixMonthsAgo = mostRecentDate.AddMonths(-5);
+
+            var largestExpenses = expenses
+                .Where(e => e.Date >= sixMonthsAgo)
+                .OrderByDescending(e => e.Amount)
+                .Take(5)
+                .ToList();
+
+            var data = largestExpenses.Select(e => (double)e.Amount).ToArray();
+            var labels = largestExpenses.Select(e => 
+                $"{e.Description} ({e.Date:MMM d})").ToArray();
+
+            return (data, labels);
+        }
     }
 } 
