@@ -15,7 +15,7 @@
             <MudPaper Class="pa-4">
                 <MudGrid>
                     <MudItem xs="12" Class="d-flex justify-center">
-                        <MudText Typo="Typo.h2" Color="Color.Default" Class="mb-0">
+                        <MudText Typo="Typo.h2" Color="Color.Default" Class="mb-n4">
                             @(_spendingTrendData.Sum().ToString("C"))
                         </MudText>
                     </MudItem>
@@ -40,7 +40,7 @@
             <MudPaper Class="pa-4">
                 <MudGrid>
                     <MudItem xs="12" Class="d-flex justify-center">
-                        <MudText Typo="Typo.h2" Color="Color.Default" Class="mb-0">
+                        <MudText Typo="Typo.h2" Color="Color.Default" Class="mb-n4">
                             @(_categoryGroupSeries.Any() ? _categoryGroupSeries.Sum(s => s.Data.Sum()).ToString("C") : "$0.00")
                         </MudText>
                     </MudItem>
@@ -86,13 +86,13 @@
         <MudItem xs="12" sm="6" md="4">
             <MudPaper Class="pa-4" Style="height: 600px;">
                 <MudText Typo="Typo.h6" Class="mb-4 d-flex flex-column align-center">Largest Expenses (6 Months)</MudText>
-                <MudList Dense="true" Clickable="false" T="Expense" Class="py-2">
+                <MudList Dense="true" ClickableItems="false" T="Expense" Class="py-2">
                     @foreach (var expense in _expenses
                         .Where(e => e.Date >= DateTime.Today.AddMonths(-6))
                         .OrderByDescending(e => e.Amount)
                         .Take(7))
                     {
-                        <MudListItem T="Expense" Clickable="false" Class="py-2">
+                        <MudListItem T="Expense" ClickableItems="false" Class="py-2">
                             <div class="d-flex justify-space-between align-center" style="width: 100%;">
                                 <div>
                                     <MudText>@expense.Description</MudText>
@@ -106,8 +106,6 @@
             </MudPaper>
         </MudItem>
     </MudGrid>
-
-
 
     <!-- Add Expense Section -->
     <MudPaper Class="pa-4 mb-4" Style="background:#181820;">
