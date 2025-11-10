@@ -48,7 +48,3 @@ The first run creates an `expenses.db` file in the project root that contains ex
 
 - **Categorization errors** – If `OPENAI_API_KEY` is not set or the Azure OpenAI call fails, new expenses are still saved but default to the `Other` category. Check the server console for error messages.
 - **Database locked or corrupted** – Stop the app and delete `expenses.db` to recreate a clean database.
-
-## License
-
-This project does not currently declare a license. Add one before distributing the application.
